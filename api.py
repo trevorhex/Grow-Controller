@@ -18,9 +18,9 @@ def data():
     data = []
     for row in rows:
       data.append({
-        'co2': row[0],
-        'temperature': row[1],
-        'humidity': row[2],
+        'temperature': row[0],
+        'humidity': row[1],
+        'co2': row[2],
         'timestamp': row[3]
       })
     return jsonify(data)
