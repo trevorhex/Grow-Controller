@@ -1,7 +1,7 @@
-from flask import Flask
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
-@app.route('/')
-def index():
-  return '<h1>Grow Controller</h1>'
+@app.route('/data', methods=['GET'])
+def data():
+  return jsonify({ 'message': 'Grow Controller' })
