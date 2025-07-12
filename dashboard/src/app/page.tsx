@@ -6,7 +6,7 @@ export default function App() {
   return <Box py={8}>
     <Container>
       <Typography variant="h1" textAlign="center">
-        Grow Controller
+        Grow Controller Dashboard
       </Typography>
     </Container>
   </Box>
