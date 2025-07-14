@@ -6,7 +6,7 @@ import Main from '@/components/templates/Main'
 import Graph from '@/components/global/Graph'
 
 export default async function IndexPage() {
-  const response = await fetch(`${API_URL}/data`)
+  const response = await fetch(`${API_URL}/readings`)
   const data: Data[] = await response.json()
 
   return <Main>

@@ -17,7 +17,8 @@ def data():
   try:
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM readings')
-    return jsonify(cursor.fetchall())
+    rows = cursor.fetchall()
+    return jsonify([dict(row) for row in rows])
   finally:
     conn.close()
 
@@ -30,7 +31,8 @@ def warnings():
   try:
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM warnings')
-    return jsonify(cursor.fetchall())
+    rows = cursor.fetchall()
+    return jsonify([dict(row) for row in rows])
   finally:
     conn.close()
 
@@ -43,7 +45,8 @@ def boundaries():
   try:
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM boundaries')
-    return jsonify(cursor.fetchall())
+    rows = cursor.fetchall()
+    return jsonify([dict(row) for row in rows])
   finally:
     conn.close()
 
@@ -56,7 +59,8 @@ def flushes():
   try:
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM flushes')
-    return jsonify(cursor.fetchall())
+    rows = cursor.fetchall()
+    return jsonify([dict(row) for row in rows])
   finally:
     conn.close()
 
