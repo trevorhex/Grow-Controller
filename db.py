@@ -36,14 +36,14 @@ cursor.execute('''
 cursor.execute('''
   CREATE TABLE boundaries (
     id INTEGER PRIMARY KEY,
-    temperature_min_warn FLOAT NOT NULL,
-    temperature_max_warn FLOAT NOT NULL,
-    humidity_min FLOAT NOT NULL,
-    humidity_min_warn FLOAT NOT NULL,
-    humidity_max FLOAT NOT NULL,
-    humidity_max_warn FLOAT NOT NULL,
-    co2_max INTEGER NOT NULL,
-    co2_max_warn INTEGER NOT NULL,
+    temperature_min_warn FLOAT,
+    temperature_max_warn FLOAT,
+    humidity_min FLOAT,
+    humidity_min_warn FLOAT,
+    humidity_max FLOAT,
+    humidity_max_warn FLOAT,
+    co2_max INTEGER,
+    co2_max_warn INTEGER,
     flush_id INTEGER,
     FOREIGN KEY (flush_id) REFERENCES flushes (id)
   );
@@ -62,15 +62,15 @@ if args.s:
   try:
     cursor.execute('INSERT INTO flushes (start_datetime, active, current) VALUES ("2025-07-14 08:00:00", 0, 1);')
     cursor.executemany('INSERT INTO readings (temperature, humidity, co2, flush_id, timestamp) VALUES (?, ?, ?, ?, ?);', (
-      (82.5, 70.1, 210, 1, "2025-07-14 08:00:00"),
-      (83.4, 66.0, 212, 1, "2025-07-14 08:01:00"),
-      (81.2, 59.8, 212, 1, "2025-07-14 08:02:00"),
-      (78.0, 69.3, 213, 1, "2025-07-14 08:03:00"),
-      (64.3, 73.0, 215, 1, "2025-07-14 08:04:00"),
-      (60.3, 78.7, 217, 1, "2025-07-14 08:05:00"),
-      (61.6, 76.4, 218, 1, "2025-07-14 08:06:00"),
-      (65.6, 75.9, 221, 1, "2025-07-14 08:07:00"),
-      (70.7, 76.0, 220, 1, "2025-07-14 08:08:00")
+      (82.5, 70.1, 210, 1, '2025-07-14 08:00:00'),
+      (83.4, 66.0, 212, 1, '2025-07-14 08:01:00'),
+      (81.2, 59.8, 212, 1, '2025-07-14 08:02:00'),
+      (78.0, 69.3, 213, 1, '2025-07-14 08:03:00'),
+      (64.3, 73.0, 215, 1, '2025-07-14 08:04:00'),
+      (60.3, 78.7, 217, 1, '2025-07-14 08:05:00'),
+      (61.6, 76.4, 218, 1, '2025-07-14 08:06:00'),
+      (65.6, 75.9, 221, 1, '2025-07-14 08:07:00'),
+      (70.7, 76.0, 220, 1, '2025-07-14 08:08:00')
     ))
     cursor.execute('''
       INSERT INTO boundaries (

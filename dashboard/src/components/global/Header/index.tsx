@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 import { styled } from '@mui/material/styles'
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
@@ -6,6 +8,7 @@ import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
 
 import { drawerWidth } from '@/components/templates/Main'
+import { ROUTES } from '@/config/routes'
 
 export interface HeaderProps {
   open: boolean
@@ -13,11 +16,11 @@ export interface HeaderProps {
 }
 
 export interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
+  open?: boolean
 }
 
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
+  shouldForwardProp: (prop) => prop !== 'open'
 })<AppBarProps>(({ theme }) => ({
   transition: theme.transitions.create(['margin', 'width'], {
     easing: theme.transitions.easing.sharp,
@@ -52,7 +55,9 @@ export default function Header({ open, onOpenDrawer }: HeaderProps) {
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" noWrap component="div">
-          Grow Controller Dashboard
+          <Link href={ROUTES.HOME} style={{ color: 'inherit', textDecoration: 'none', cursor: 'pointer' }}>
+            Grow Controller Dashboard
+          </Link>
         </Typography>
       </Toolbar>
     </AppBar>

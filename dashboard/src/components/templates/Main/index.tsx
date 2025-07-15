@@ -1,8 +1,5 @@
 'use client'
 
-import { Children, useState, useEffect } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
-
 import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
@@ -74,7 +71,7 @@ export default function MainTemplate({ children }: { children: React.ReactNode }
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
-        <Container sx={{ pb: 8 }}>{children}</Container>
+        <Container sx={{ pt: 4, pb: 8 }}>{children}</Container>
       </Main>
     </Box>
   )

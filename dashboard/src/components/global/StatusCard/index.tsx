@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import Card from '@mui/material/Card'
+
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
 import Table from '@mui/material/Table'
@@ -9,6 +9,7 @@ import TableBody from '@mui/material/TableBody'
 import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 
+import Card from '@/components/global/Card'
 import { Flush } from '@/interfaces/Flush'
 
 export interface StatusCardProps {
@@ -18,7 +19,7 @@ export interface StatusCardProps {
 export default function StatusCard({ flush }: StatusCardProps) {
   const [active, setActive] = useState(!!flush.active)
 
-  return <Card sx={{ p: 5, minWidth: '33.33%' }}>
+  return <Card title="Status" sx={{ minWidth: '33.33%' }}>
     <Stack gap={2}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" gap={1}>
         <Button

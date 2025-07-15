@@ -28,6 +28,17 @@ export const buildThemeOptions = () => {
             '&.MuiTableCell-head': { fontSize: '1.25rem', paddingTop: 0, paddingBottom: '1.6rem' }
           }
         }
+      },
+      MuiCardHeader: {
+        styleOverrides: {
+          root: {
+            padding: '2.4rem !important',
+            '&:not(:last-child)': { paddingBottom: '0 !important', marginBottom: '-0.8rem' }
+          }
+        }
+      },
+      MuiCardContent: {
+        styleOverrides: { root: { padding: '2.4rem !important' } }
       }
     }
   }

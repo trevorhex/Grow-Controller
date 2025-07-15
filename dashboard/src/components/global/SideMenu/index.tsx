@@ -29,7 +29,7 @@ const ListItem = ({ icon: Icon, text, href }: ListItemProps) => {
   const color = {
     [ROUTES.HOME]: theme.palette.primary.main,
     [ROUTES.WARNINGS]: theme.palette.secondary.main,
-    [ROUTES.PREVIOUS]: theme.palette.info.main
+    [ROUTES.FLUSHES]: theme.palette.info.main
   }[pathname]
 
   return (
@@ -57,7 +57,7 @@ const ListItem = ({ icon: Icon, text, href }: ListItemProps) => {
 const items: ListItemProps[] = [
   { icon: CompostOutlinedIcon, text: 'Current Flush', href: ROUTES.HOME },
   { icon: WarningAmberOutlinedIcon, text: 'Warnings', href: ROUTES.WARNINGS },
-  { icon: ArchiveOutlinedIcon, text: 'Previous Flushes', href: ROUTES.PREVIOUS }
+  { icon: ArchiveOutlinedIcon, text: 'Previous Flushes', href: ROUTES.FLUSHES }
 ]
 
 export default function SideMenu() {

@@ -20,7 +20,7 @@ export default async function IndexPage() {
 
   return <Main>
     <Stack gap={6}>
-      <Stack direction={{ md: 'row' }} gap={4} mt={4}>
+      <Stack direction={{ md: 'row' }} gap={4}>
         <StatusCard flush={flush} />
         <BoundariesCard
           heading="Relay Boundaries"

@@ -3,7 +3,6 @@
 import { useState, KeyboardEvent } from 'react'
 import { useForm } from 'react-hook-form'
 
-import Card from '@mui/material/Card'
 import Stack from '@mui/material/Stack'
 import Table from '@mui/material/Table'
 import TableHead from '@mui/material/TableHead'
@@ -14,9 +13,11 @@ import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
+import Typography from '@mui/material/Typography'
 import CloseIcon from '@mui/icons-material/Close'
 import EditIcon from '@mui/icons-material/Edit'
 
+import Card from '@/components/global/Card'
 import { maskNumberInput } from '@/libs/forms'
 
 import useResolver from './hooks/useResolver'
@@ -55,7 +56,7 @@ export default function BoundariesCard({ boundaries, heading }: BoundariesCardPr
     setEditing(false)
   }
 
-  return <Card sx={{ p: 5, minWidth: '33.33%' }}>
+  return <Card sx={{ minWidth: '33.33%' }}>
     <form onSubmit={handleSubmit(handleSave)}>
       <Stack gap={2} alignItems="flex-end">
           <Table>
@@ -63,7 +64,7 @@ export default function BoundariesCard({ boundaries, heading }: BoundariesCardPr
               <TableRow>
                 <TableCell colSpan={2} sx={{ ...editing ? { borderBottom: 'none' } : {} }}>
                   <Stack direction="row" justifyContent="space-between" alignItems="center" gap={1}>
-                    {heading}
+                    <Typography variant="h5">{heading}</Typography>
                     {editing
                       ? <IconButton onClick={() => setEditing(false)}><CloseIcon /></IconButton>
                       : <IconButton onClick={() => setEditing(true)}><EditIcon /></IconButton>}

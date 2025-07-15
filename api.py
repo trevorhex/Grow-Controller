@@ -25,8 +25,8 @@ def flush(flush_id=None):
     
     flush_row = cursor.fetchone() 
     if not flush_row:
-      return jsonify({"error": "No flush found"}), 404
-    
+      return jsonify({ 'error': 'No flush found' }), 404
+
     flush_data = dict(flush_row)
     flush_id = flush_data['id']
     
@@ -39,13 +39,13 @@ def flush(flush_id=None):
     boundary_data = dict(boundary_row) if boundary_row else None
 
     return jsonify({
-      "flush": flush_data,
-      "readings": readings_data,
-      "boundary": boundary_data
+      'flush': flush_data,
+      'readings': readings_data,
+      'boundary': boundary_data
     })
   except Exception as e:
     print(f"An error occurred: {str(e)}")
-    return jsonify({ "error": str(e) }), 500
+    return jsonify({ 'error': str(e) }), 500
   finally:
     conn.close()
 
@@ -60,6 +60,43 @@ def flushes():
     cursor.execute('SELECT * FROM flushes')
     rows = cursor.fetchall()
     return jsonify([dict(row) for row in rows])
+  finally:
+    conn.close()
+
+#
+# PATCH /boundaries/<int:boundary_id>
+#
+@app.route('/boundaries/<int:boundary_id>', methods=['PATCH'])
+def update_boundary(boundary_id):
+  conn = create_connection()
+  try:
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM boundaries WHERE id = ?', (boundary_id,))
+    boundary_row = cursor.fetchone()
+
+    if not boundary_row:
+      return jsonify({ 'error': 'Boundary not found' }), 404
+
+    allowed_fields = {
+      'temperature_min_warn', 'temperature_max_warn',
+      'humidity_min', 'humidity_min_warn', 'humidity_max', 'humidity_max_warn',
+      'co2_max', 'co2_max_warn'
+    }
+
+    updates = { key: value for key, value in request.json.items() if key in allowed_fields }
+
+    set_clause = ', '.join([f"{key} = ?" for key in updates.keys()])
+    values = list(updates.values()) + [boundary_id]
+    
+    cursor.execute(f'UPDATE boundaries SET {set_clause} WHERE id = ?', values)
+    conn.commit()
+
+    cursor.execute('SELECT * FROM boundaries WHERE id = ?', (boundary_id,))
+    return jsonify(dict(cursor.fetchone()))
+
+  except Exception as e:
+    print(f"An error occurred: {str(e)}")
+    return jsonify({ 'error': str(e) }), 500
   finally:
     conn.close()
 
