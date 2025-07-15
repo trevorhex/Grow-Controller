@@ -9,14 +9,40 @@ def create_connection():
   return conn
 
 #
-# GET /readings
+# GET /flush
 #
-@app.route('/readings', methods=['GET'])
-def data():
+@app.route('/flush', methods=['GET'])
+def flush():
   conn = create_connection()
   try:
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM readings')
+    cursor.execute('''
+      SELECT f.*, r.*, b.*
+      FROM flushes f
+      JOIN readings r ON f.id = r.flush_id
+      JOIN boundaries b ON f.id = b.flush_id
+      WHERE f.current = 1
+    ''')
+    rows = cursor.fetchall()
+    return jsonify([dict(row) for row in rows])
+  finally:
+    conn.close()
+
+#
+# GET /flush/:flush_id
+#
+@app.route('/flush/<int:flush_id>', methods=['GET'])
+def flush(flush_id):
+  conn = create_connection()
+  try:
+    cursor = conn.cursor()
+    cursor.execute('''
+      SELECT f.*, r.*, b.*
+      FROM flushes f
+      JOIN readings r ON f.id = r.flush_id
+      JOIN boundaries b ON f.id = b.flush_id
+      WHERE f.id = ?
+    ''', (flush_id,))
     rows = cursor.fetchall()
     return jsonify([dict(row) for row in rows])
   finally:

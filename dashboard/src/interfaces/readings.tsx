@@ -1,4 +1,4 @@
-export interface Data {
+export interface Readings {
   id: number
   temperature: number
   humidity: number

@@ -1,22 +1,48 @@
+import { ElementType } from 'react'
+import Link from 'next/link'
+
 import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
+import MuiListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import InboxIcon from '@mui/icons-material/MoveToInbox'
-import TimelineIcon from '@mui/icons-material/Timeline'
+import CompostOutlinedIcon from '@mui/icons-material/CompostOutlined'
+import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined'
+import StackedLineChartIcon from '@mui/icons-material/StackedLineChart'
+import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined'
+
+import { ROUTES } from '@/config/routes'
+
+interface ListItemProps {
+  icon: ElementType
+  text: string
+  href: string
+}
+
+const ListItem = ({ icon: Icon, text, href }: ListItemProps) => (
+  <MuiListItem disablePadding>
+    <Link href={href} passHref style={{ textDecoration: 'none', color: 'inherit', width: '100%' }}>
+      <ListItemButton>
+        <ListItemIcon>
+          <Icon sx={{ fontSize: '1.7rem' }} />
+        </ListItemIcon>
+        <ListItemText primary={text} />
+      </ListItemButton>
+    </Link>
+  </MuiListItem>
+)
+
+const items: ListItemProps[] = [
+  { icon: CompostOutlinedIcon, text: 'Current Flush', href: ROUTES.HOME },
+  { icon: StackedLineChartIcon, text: 'Boundaries', href: ROUTES.BOUNDARIES },
+  { icon: WarningAmberOutlinedIcon, text: 'Warnings', href: ROUTES.WARNINGS },
+  { icon: ArchiveOutlinedIcon, text: 'Previous Flushes', href: ROUTES.PREVIOUS }
+]
 
 export default function SideMenu() {
   return (
     <List>
-      <ListItem disablePadding>
-        <ListItemButton>
-          <ListItemIcon>
-            <TimelineIcon />
-          </ListItemIcon>
-          <ListItemText primary="Environmental Data" />
-        </ListItemButton>
-      </ListItem>
+      {items.map((item, index) => <ListItem key={index} {...item} />)}
     </List>
   )
 }

@@ -18,7 +18,8 @@ cursor.execute('''
     id INTEGER PRIMARY KEY,
     start_datetime DATETIME,
     end_datetime DATETIME,
-    active INTEGER NOT NULL DEFAULT 0
+    active INTEGER NOT NULL DEFAULT 0,
+    current INTEGER NOT NULL DEFAULT 0
   );
 ''')
 cursor.execute('''
@@ -59,7 +60,7 @@ cursor.execute('''
 
 if args.s:
   try:
-    cursor.execute('INSERT INTO flushes (start_datetime, active) VALUES ("2025-07-14 08:00:00", 1);')
+    cursor.execute('INSERT INTO flushes (start_datetime, active, current) VALUES ("2025-07-14 08:00:00", 0, 1);')
     cursor.executemany('INSERT INTO readings (temperature, humidity, co2, flush_id, timestamp) VALUES (?, ?, ?, ?, ?);', (
       (82.5, 70.1, 210, 1, "2025-07-14 08:00:00"),
       (83.4, 66.0, 212, 1, "2025-07-14 08:01:00"),

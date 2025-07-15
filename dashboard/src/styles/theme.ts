@@ -2,7 +2,10 @@ import { ThemeOptions } from '@mui/material/styles'
 import { createTheme, PaletteOptions } from '@mui/material'
 
 const buildPalette = () => ({
-  mode: 'dark'
+  mode: 'dark',
+  primary: { main: '#2ecc71' },
+  secondary: { main: '#e74c3c' },
+  info: { main: '#3498db' }
 } as PaletteOptions)
 
 export const buildThemeOptions = () => {
@@ -16,4 +19,4 @@ export const buildThemeOptions = () => {
   return ({ palette, ...themeOptions })
 }
 
-export const createCustomTheme = () => createTheme(buildThemeOptions())
+export default () => createTheme(buildThemeOptions())

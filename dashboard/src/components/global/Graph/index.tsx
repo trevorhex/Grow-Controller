@@ -2,21 +2,23 @@ import { LineChart } from '@mui/x-charts/LineChart'
 import Typography from '@mui/material/Typography'
 import Stack from '@mui/material/Stack'
 
-
-import { Data } from '@/interfaces/data'
+import createTheme from '@/styles/theme'
+import { Readings } from '@/interfaces/readings'
 
 export interface GraphProps {
   title?: string
-  data?: Data[]
+  readings?: Readings[]
 }
 
-export default function Graph({ title, data = [] }: GraphProps) {
+const theme = createTheme()
+
+export default function Graph({ title, readings = [] }: GraphProps) {
   return (
     <Stack spacing={3}>
       {title && <Typography variant="h4" textAlign="center">{title}</Typography>}
       <LineChart
         xAxis={[{ 
-          data: data.map(item => (new Date(item.timestamp)).toLocaleString('en-US', {
+          data: readings.map(reading => (new Date(reading.timestamp)).toLocaleString('en-US', {
             month: 'short',
             day: 'numeric',
             hour: '2-digit',
@@ -25,17 +27,17 @@ export default function Graph({ title, data = [] }: GraphProps) {
           scaleType: 'point'
         }]}
         series={[{ 
-          data: data.map(item => item.co2),
+          data: readings.map(reading => reading.co2),
           label: 'CO2 (ppm)',
-          color: '#2ecc71'
+          color: theme.palette.primary.main
         }, { 
-          data: data.map(item => item.temperature),
+          data: readings.map(reading => reading.temperature),
           label: 'Temperature (°F)',
-          color: '#e74c3c'
+          color: theme.palette.secondary.main
         }, {
-          data: data.map(item => item.humidity),
+          data: readings.map(reading => reading.humidity),
           label: 'Humidity (%)',
-          color: '#3498db'
+          color: theme.palette.info.main
         }]}
         height={450}
       />
