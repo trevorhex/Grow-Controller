@@ -9,42 +9,40 @@ def create_connection():
   return conn
 
 #
-# GET /flush
+# GET /flush or GET /flush/:flush_id
 #
 @app.route('/flush', methods=['GET'])
-def flush():
-  conn = create_connection()
-  try:
-    cursor = conn.cursor()
-    cursor.execute('''
-      SELECT f.*, r.*, b.*
-      FROM flushes f
-      JOIN readings r ON f.id = r.flush_id
-      JOIN boundaries b ON f.id = b.flush_id
-      WHERE f.current = 1
-    ''')
-    rows = cursor.fetchall()
-    return jsonify([dict(row) for row in rows])
-  finally:
-    conn.close()
-
-#
-# GET /flush/:flush_id
-#
 @app.route('/flush/<int:flush_id>', methods=['GET'])
-def flush_by_id(flush_id):
+def flush(flush_id=None):
   conn = create_connection()
   try:
     cursor = conn.cursor()
-    cursor.execute('''
-      SELECT f.*, r.*, b.*
-      FROM flushes f
-      JOIN readings r ON f.id = r.flush_id
-      JOIN boundaries b ON f.id = b.flush_id
-      WHERE f.id = ?
-    ''', (flush_id,))
-    rows = cursor.fetchall()
-    return jsonify([dict(row) for row in rows])
+    
+    if flush_id is None:
+      cursor.execute('SELECT * FROM flushes WHERE current = 1')
+    else:
+      cursor.execute('SELECT * FROM flushes WHERE id = ?', (flush_id,))
+    
+    flush_row = cursor.fetchone() 
+    if not flush_row:
+      return jsonify({"error": "No current flush found"}), 404
+    
+    flush_data = dict(flush_row)
+    flush_id = flush_data['id']
+    
+    cursor.execute('SELECT * FROM readings WHERE flush_id = ? ORDER BY timestamp', (flush_id,))
+    readings_rows = cursor.fetchall()
+    readings_data = [dict(row) for row in readings_rows]
+    
+    cursor.execute('SELECT * FROM boundaries WHERE flush_id = ?', (flush_id,))
+    boundaries_row = cursor.fetchone()
+    boundaries_data = dict(boundaries_row) if boundaries_row else None
+    
+    return jsonify({
+      "flush": flush_data,
+      "readings": readings_data,
+      "boundaries": boundaries_data
+    })
   finally:
     conn.close()
 
