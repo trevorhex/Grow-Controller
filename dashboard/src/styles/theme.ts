@@ -18,7 +18,18 @@ export const buildThemeOptions = () => {
       h3: { fontSize: '2.5rem' },
       h4: { fontSize: '2rem' }
     },
-    components: {}
+    components: {
+      MuiTableCell: {
+        styleOverrides: {
+          root: {
+            paddingLeft: 0,
+            paddingRight: 0,
+            '&:not(:last-child)': { paddingRight: '0.5rem' },
+            '&.MuiTableCell-head': { fontSize: '1.25rem', paddingTop: 0, paddingBottom: '1.6rem' }
+          }
+        }
+      }
+    }
   }
 
   return ({ palette, ...themeOptions })

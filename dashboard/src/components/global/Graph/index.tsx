@@ -28,7 +28,7 @@ export default function Graph({ title, readings = [] }: GraphProps) {
         }]}
         series={[{ 
           data: readings.map(reading => reading.co2),
-          label: 'CO2 (ppm)',
+          label: 'CO₂ (ppm)',
           color: theme.palette.primary.main
         }, { 
           data: readings.map(reading => reading.temperature),

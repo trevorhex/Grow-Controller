@@ -18,7 +18,7 @@ try:
       humidity = sensor.relative_humidity
       timestamp = datetime.datetime.now()
 
-      print("CO2 %d ppm" % co2)
+      print("CO₂ %d ppm" % co2)
       print("Temperature %0.1f *F" % temp)
       print("Humidity %0.1f %%" % humidity)
   

@@ -43,11 +43,11 @@ export default function StatusCard({ flush }: StatusCardProps) {
       <Table>
         <TableBody>
           <TableRow>
-            <TableCell width="60px">Status</TableCell>
+            <TableCell width="50%">Status</TableCell>
             <TableCell>{active ? 'Active' : 'Inactive'}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell width="60px">Started</TableCell>
+            <TableCell>Started</TableCell>
             <TableCell>{flush.start_datetime?.toLocaleString() ?? '--'}</TableCell>
           </TableRow>
           <TableRow>
