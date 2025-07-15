@@ -1,6 +1,7 @@
 'use client'
 
-import { Children, useState } from 'react'
+import { Children, useState, useEffect } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 
 import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
@@ -11,6 +12,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 
 import Header from '@/components/global/Header'
 import SideMenu from '@/components/global/SideMenu'
+import { useDrawer } from '@/contexts/DrawerContext'
 
 export const drawerWidth = 300
 
@@ -45,10 +47,11 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }))
 
 export default function MainTemplate({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = useState(false)
+  const { open, toggle } = useDrawer()
+
   return (
     <Box sx={{ display: 'flex'}}>
-      <Header open={open} onOpenDrawer={() => setOpen(true)} />
+      <Header open={open} onOpenDrawer={toggle} />
       <Drawer
         sx={{
           width: drawerWidth,
@@ -63,7 +66,7 @@ export default function MainTemplate({ children }: { children: React.ReactNode }
         open={open}
       >
         <DrawerHeader>
-          <IconButton size="large" onClick={() => setOpen(false)}>
+          <IconButton size="large" onClick={toggle}>
             <ChevronLeftIcon />
           </IconButton>
         </DrawerHeader>
@@ -71,7 +74,7 @@ export default function MainTemplate({ children }: { children: React.ReactNode }
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
-        <Container sx={{ pt: 4, pb: 8 }}>{children}</Container>
+        <Container sx={{ pb: 8 }}>{children}</Container>
       </Main>
     </Box>
   )

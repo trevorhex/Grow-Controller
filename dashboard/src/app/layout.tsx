@@ -8,6 +8,7 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 
 import ThemeProvider from '@/components/global/ThemeProvider'
+import { DrawerProvider } from '@/contexts/DrawerContext'
 
 export const metadata: Metadata = {
   title: 'Grow Controller Dashboard'
@@ -18,7 +19,9 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
     <body>
       <AppRouterCacheProvider>
         <ThemeProvider>
+          <DrawerProvider>
             {children}
+          </DrawerProvider>
         </ThemeProvider>
       </AppRouterCacheProvider>
     </body>

@@ -7,7 +7,6 @@ import Main from '@/components/templates/Main'
 import Graph from '@/components/global/Graph'
 import StatusCard from '@/components/global/StatusCard'
 import BoundariesCard from '@/components/global/BoundariesCard'
-import WarningCard from '@/components/global/WarningCard'
 
 export default async function IndexPage() {
   const response = await fetch(`${API_URL}/flush`)
@@ -21,11 +20,32 @@ export default async function IndexPage() {
 
   return <Main>
     <Stack gap={6}>
-      <Typography variant="h1">Current Flush</Typography>
-      <Stack direction="row" gap={4} mt={4}>
+      <Stack direction={{ md: 'row' }} gap={4} mt={4}>
         <StatusCard flush={flush} />
-        <BoundariesCard boundary={flush.boundary} />
-        <WarningCard boundary={flush.boundary} />
+        <BoundariesCard
+          heading="Relay Boundaries"
+          boundaries={flush.boundary
+            ? [
+                { name: 'Humidity Min', value: flush.boundary.humidity_min, type: 'percentage' },
+                { name: 'Humidity Max', value: flush.boundary.humidity_max, type: 'percentage' },
+                { name: 'CO₂ Max', value: flush.boundary.co2_max, type: 'ppm' },
+                { name: 'Lights On', value: '07:00', type: 'time' },
+                { name: 'Lights Off', value: '19:00', type: 'time' }
+              ]
+            : []}
+        />
+        <BoundariesCard
+          heading="Warning Boundaries"
+          boundaries={flush.boundary
+            ? [
+                { name: 'Humidity Min', value: flush.boundary.humidity_min_warn, type: 'percentage' },
+                { name: 'Humidity Max', value: flush.boundary.humidity_max_warn, type: 'percentage' },
+                { name: 'CO₂ Max', value: flush.boundary.co2_max_warn, type: 'ppm' },
+                { name: 'Temperature Min', value: flush.boundary.temperature_min_warn, type: 'temperature' },
+                { name: 'Temperature Max', value: flush.boundary.temperature_max_warn, type: 'temperature' }
+              ]
+            : []}
+        />
       </Stack>
       {flush.readings.length > 0 && <Graph title="Trends" readings={flush.readings} />}
     </Stack>
