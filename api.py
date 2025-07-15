@@ -11,8 +11,8 @@ def create_connection():
 #
 # GET /flush or GET /flush/:flush_id
 #
-@app.route('/flush', methods=['GET'])
-@app.route('/flush/<int:flush_id>', methods=['GET'])
+@app.route('/flushes/current', methods=['GET'])
+@app.route('/flushes/<int:flush_id>', methods=['GET'])
 def flush(flush_id=None):
   conn = create_connection()
   try:
@@ -43,34 +43,9 @@ def flush(flush_id=None):
       "readings": readings_data,
       "boundary": boundary_data
     })
-  finally:
-    conn.close()
-
-#
-# GET /warnings
-#
-@app.route('/warnings', methods=['GET'])
-def warnings():
-  conn = create_connection()
-  try:
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM warnings')
-    rows = cursor.fetchall()
-    return jsonify([dict(row) for row in rows])
-  finally:
-    conn.close()
-
-#
-# GET /boundaries
-#
-@app.route('/boundaries', methods=['GET'])
-def boundaries():
-  conn = create_connection()
-  try:
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM boundaries')
-    rows = cursor.fetchall()
-    return jsonify([dict(row) for row in rows])
+  except Exception as e:
+    print(f"An error occurred: {str(e)}")
+    return jsonify({ "error": str(e) }), 500
   finally:
     conn.close()
 

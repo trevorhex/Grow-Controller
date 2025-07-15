@@ -27,6 +27,7 @@ export interface BoundariesCardProps {
 }
 
 export interface Boundary {
+  label: string
   name: string
   value: string | number
   type: 'percentage' | 'ppm' | 'temperature' | 'time'
@@ -74,7 +75,7 @@ export default function BoundariesCard({ boundaries, heading }: BoundariesCardPr
               {boundaries.map((boundary, i) =>
                 <TableRow key={i}>
                   <TableCell sx={{ width: '50%', ...editing ? { py: 0.81, borderBottom: 'none' } : {} }}>
-                    {boundary.name}
+                    {boundary.label}
                   </TableCell>
                   <TableCell sx={{ pl: 1.5, ...editing ? { py: 0.81, pl: 0, borderBottom: 'none' } : {} }}>
                     {editing

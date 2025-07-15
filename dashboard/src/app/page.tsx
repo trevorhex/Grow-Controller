@@ -9,7 +9,7 @@ import StatusCard from '@/components/global/StatusCard'
 import BoundariesCard from '@/components/global/BoundariesCard'
 
 export default async function IndexPage() {
-  const response = await fetch(`${API_URL}/flush`)
+  const response = await fetch(`${API_URL}/flushes/current`)
   const flush: Flush = await response.json()
 
   if (!flush) {
@@ -26,11 +26,11 @@ export default async function IndexPage() {
           heading="Relay Boundaries"
           boundaries={flush.boundary
             ? [
-                { name: 'Humidity Min', value: flush.boundary.humidity_min, type: 'percentage' },
-                { name: 'Humidity Max', value: flush.boundary.humidity_max, type: 'percentage' },
-                { name: 'CO₂ Max', value: flush.boundary.co2_max, type: 'ppm' },
-                { name: 'Lights On', value: '07:00', type: 'time' },
-                { name: 'Lights Off', value: '19:00', type: 'time' }
+                { label: 'Humidity Min', name: 'humidity_min', value: flush.boundary.humidity_min, type: 'percentage' },
+                { label: 'Humidity Max', name: 'humidity_max', value: flush.boundary.humidity_max, type: 'percentage' },
+                { label: 'CO₂ Max', name: 'co2_max', value: flush.boundary.co2_max, type: 'ppm' },
+                { label: 'Lights On', name: 'lights_on', value: '07:00', type: 'time' },
+                { label: 'Lights Off', name: 'lights_off', value: '19:00', type: 'time' }
               ]
             : []}
         />
@@ -38,11 +38,11 @@ export default async function IndexPage() {
           heading="Warning Boundaries"
           boundaries={flush.boundary
             ? [
-                { name: 'Humidity Min', value: flush.boundary.humidity_min_warn, type: 'percentage' },
-                { name: 'Humidity Max', value: flush.boundary.humidity_max_warn, type: 'percentage' },
-                { name: 'CO₂ Max', value: flush.boundary.co2_max_warn, type: 'ppm' },
-                { name: 'Temperature Min', value: flush.boundary.temperature_min_warn, type: 'temperature' },
-                { name: 'Temperature Max', value: flush.boundary.temperature_max_warn, type: 'temperature' }
+                { label: 'Humidity Min', name: 'humidity_min_warn', value: flush.boundary.humidity_min_warn, type: 'percentage' },
+                { label: 'Humidity Max', name: 'humidity_max_warn', value: flush.boundary.humidity_max_warn, type: 'percentage' },
+                { label: 'CO₂ Max', name: 'co2_max_warn', value: flush.boundary.co2_max_warn, type: 'ppm' },
+                { label: 'Temperature Min', name: 'temperature_min_warn', value: flush.boundary.temperature_min_warn, type: 'temperature' },
+                { label: 'Temperature Max', name: 'temperature_max_warn', value: flush.boundary.temperature_max_warn, type: 'temperature' }
               ]
             : []}
         />
