@@ -1,17 +1,25 @@
-import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 
-import { Readings } from '@/interfaces/readings'
+import { Flush } from '@/interfaces/Flush'
 import { API_URL } from '@/api/config'
 import Main from '@/components/templates/Main'
 import Graph from '@/components/global/Graph'
+import StatusCard from '@/components/global/StatusCard'
 
 export default async function IndexPage() {
   const response = await fetch(`${API_URL}/flush`)
-  const readings: Readings[] = await response.json()
+  const flush: Flush = await response.json()
 
   return <Main>
-    {readings?.length > 0 && <Box mt={8}>
-      <Graph title="Environmental Data" readings={readings} />
-    </Box>}
+    {flush
+      ? <Stack gap={6}>
+          <Typography variant="h1">Current Flush</Typography>
+          <Stack direction="row" gap={4} mt={4}>
+            <StatusCard flush={flush} />
+          </Stack>
+          {flush.readings.length > 0 && <Graph title="Trend" readings={flush.readings} />}
+        </Stack>
+      : <Typography variant="h4" textAlign="center">No current flush.</Typography>}
   </Main>
 }

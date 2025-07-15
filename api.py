@@ -25,7 +25,7 @@ def flush(flush_id=None):
     
     flush_row = cursor.fetchone() 
     if not flush_row:
-      return jsonify({"error": "No current flush found"}), 404
+      return jsonify({"error": "No flush found"}), 404
     
     flush_data = dict(flush_row)
     flush_id = flush_data['id']
@@ -35,9 +35,9 @@ def flush(flush_id=None):
     readings_data = [dict(row) for row in readings_rows]
     
     cursor.execute('SELECT * FROM boundaries WHERE flush_id = ?', (flush_id,))
-    boundaries_row = cursor.fetchone()
-    boundaries_data = dict(boundaries_row) if boundaries_row else None
-    
+    boundaries_rows = cursor.fetchall()
+    boundaries_data = [dict(row) for row in boundaries_rows] if boundaries_rows else None
+
     return jsonify({
       "flush": flush_data,
       "readings": readings_data,

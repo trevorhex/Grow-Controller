@@ -71,7 +71,7 @@ export default function MainTemplate({ children }: { children: React.ReactNode }
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
-        <Container>{children}</Container>
+        <Container sx={{ pt: 4, pb: 8 }}>{children}</Container>
       </Main>
     </Box>
   )

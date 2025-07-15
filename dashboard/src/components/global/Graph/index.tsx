@@ -3,11 +3,11 @@ import Typography from '@mui/material/Typography'
 import Stack from '@mui/material/Stack'
 
 import createTheme from '@/styles/theme'
-import { Readings } from '@/interfaces/readings'
+import { Reading } from '@/interfaces/Reading'
 
 export interface GraphProps {
   title?: string
-  readings?: Readings[]
+  readings?: Reading[]
 }
 
 const theme = createTheme()
@@ -15,7 +15,7 @@ const theme = createTheme()
 export default function Graph({ title, readings = [] }: GraphProps) {
   return (
     <Stack spacing={3}>
-      {title && <Typography variant="h4" textAlign="center">{title}</Typography>}
+      {title && <Typography variant="h2" textAlign="center">{title}</Typography>}
       <LineChart
         xAxis={[{ 
           data: readings.map(reading => (new Date(reading.timestamp)).toLocaleString('en-US', {

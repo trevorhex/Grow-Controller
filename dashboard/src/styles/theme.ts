@@ -12,7 +12,12 @@ export const buildThemeOptions = () => {
   const palette = buildPalette()
 
   const themeOptions: ThemeOptions = {
-    typography: {},
+    typography: {
+      h1: { fontSize: '4rem' },
+      h2: { fontSize: '3rem' },
+      h3: { fontSize: '2.5rem' },
+      h4: { fontSize: '2rem' }
+    },
     components: {}
   }
 
