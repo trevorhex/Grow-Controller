@@ -32,7 +32,7 @@ def flush():
 # GET /flush/:flush_id
 #
 @app.route('/flush/<int:flush_id>', methods=['GET'])
-def flush(flush_id):
+def flush_by_id(flush_id):
   conn = create_connection()
   try:
     cursor = conn.cursor()
