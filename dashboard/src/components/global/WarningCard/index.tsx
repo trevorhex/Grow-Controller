@@ -11,10 +11,10 @@ import TableCell from '@mui/material/TableCell'
 import { Boundary } from '@/interfaces/Boundary'
 
 export interface WarningCardProps {
-  boundaries: Boundary[]
+  boundary: Boundary | null
 }
 
-export default function WarningCard({ boundaries }: WarningCardProps) {
+export default function WarningCard({ boundary }: WarningCardProps) {
   return <Card sx={{ p: 5, minWidth: '33.33%' }}>
     <Stack gap={2}>
       <Table>
@@ -23,28 +23,34 @@ export default function WarningCard({ boundaries }: WarningCardProps) {
             <TableCell colSpan={2}>Warning Boundaries</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          <TableRow>
-            <TableCell width="50%">Humidity Min</TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Humidity Max</TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>CO₂ Max</TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Temperature Min</TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Temperature Max</TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-        </TableBody>
+        {boundary
+          ? <TableBody>
+              <TableRow>
+                <TableCell width="50%">Humidity Min</TableCell>
+                <TableCell>{boundary.humidity_min_warn}%</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Humidity Max</TableCell>
+                <TableCell>{boundary.humidity_max_warn}%</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>CO₂ Max</TableCell>
+                <TableCell>{boundary.co2_max_warn}ppm</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Temperature Min</TableCell>
+                <TableCell>{boundary.temperature_min_warn}°F</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Temperature Max</TableCell>
+                <TableCell>{boundary.temperature_max_warn}°F</TableCell>
+              </TableRow>
+            </TableBody>
+          : <TableBody>
+              <TableRow>
+                <TableCell colSpan={2}>No boundaries set</TableCell>
+              </TableRow>
+            </TableBody>}
       </Table>
     </Stack>
   </Card>

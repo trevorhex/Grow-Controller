@@ -24,8 +24,8 @@ export default async function IndexPage() {
       <Typography variant="h1">Current Flush</Typography>
       <Stack direction="row" gap={4} mt={4}>
         <StatusCard flush={flush} />
-        <BoundariesCard boundaries={flush.boundaries} />
-        <WarningCard boundaries={flush.boundaries} />
+        <BoundariesCard boundary={flush.boundary} />
+        <WarningCard boundary={flush.boundary} />
       </Stack>
       {flush.readings.length > 0 && <Graph title="Trends" readings={flush.readings} />}
     </Stack>

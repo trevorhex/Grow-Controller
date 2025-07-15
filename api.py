@@ -35,13 +35,13 @@ def flush(flush_id=None):
     readings_data = [dict(row) for row in readings_rows]
     
     cursor.execute('SELECT * FROM boundaries WHERE flush_id = ?', (flush_id,))
-    boundaries_rows = cursor.fetchone()
-    boundaries_data = dict(boundaries_rows) if boundaries_rows else {}
+    boundary_row = cursor.fetchone()
+    boundary_data = dict(boundary_row) if boundary_row else None
 
     return jsonify({
       "flush": flush_data,
       "readings": readings_data,
-      "boundaries": boundaries_data
+      "boundary": boundary_data
     })
   finally:
     conn.close()
