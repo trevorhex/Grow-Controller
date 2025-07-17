@@ -7,16 +7,18 @@ interface Params {
   params: { id: string }
 }
 
-export async function GET(request: NextRequest, { params }: Params) {
+
+export async function PATCH(request: NextRequest, { params }: Params) {
   try {
-    const response = await fetch(`${API_URL}${ROUTES.FLUSHES}/${params.id}`, {
-      method: 'GET',
+    const response = await fetch(`${API_URL}${ROUTES.BOUNDARIES}/${params.id}`, {
+      method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(await request.json())
     })
 
     if (!response.ok) {
       return NextResponse.json(
-        { error: 'Failed to fetch flush data' },
+        { error: 'Failed to update boundary data' },
         { status: response.status }
       )
     }
@@ -24,7 +26,7 @@ export async function GET(request: NextRequest, { params }: Params) {
     const data = await response.json()
     return NextResponse.json(data)
   } catch (error) {
-    console.error('Error fetching flush data:', error)
+    console.error('Error updating boundary data:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

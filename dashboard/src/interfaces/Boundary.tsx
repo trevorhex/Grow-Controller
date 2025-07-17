@@ -8,5 +8,7 @@ export interface Boundary {
   humidity_max_warn: number
   co2_max: number
   co2_max_warn: number
+  lights_on: string
+  lights_off: string
   flush_id: number
 }

@@ -9,8 +9,7 @@ import Alert from '@mui/material/Alert'
 
 import Main from '@/components/templates/Main'
 import Graph from '@/components/global/Graph'
-import Card from '@/components/global/Card'
-import BoundariesCard, { Boundary as BoundaryType } from '@/components/global/BoundariesCard'
+import BoundariesCard from '@/components/global/BoundariesCard'
 import { Flush } from '@/interfaces/Flush'
 import { Reading } from '@/interfaces/Reading'
 import { Boundary } from '@/interfaces/Boundary'
@@ -81,15 +80,18 @@ export default function FlushPage() {
         {boundary && (
           <BoundariesCard 
             heading="Environmental Boundaries"
+            boundary={boundary}
             boundaries={[
-              { label: 'Temperature Min Warning', name: 'temperature_min_warn', value: boundary?.temperature_min_warn ?? '', type: 'temperature' },
-              { label: 'Temperature Max Warning', name: 'temperature_max_warn', value: boundary?.temperature_max_warn ?? '', type: 'temperature' },
-              { label: 'Humidity Min', name: 'humidity_min', value: boundary?.humidity_min ?? '', type: 'percentage' },
-              { label: 'Humidity Min Warning', name: 'humidity_min_warn', value: boundary?.humidity_min_warn ?? '', type: 'percentage' },
-              { label: 'Humidity Max', name: 'humidity_max', value: boundary?.humidity_max ?? '', type: 'percentage' },
-              { label: 'Humidity Max Warning', name: 'humidity_max_warn', value: boundary?.humidity_max_warn ?? '', type: 'percentage' },
-              { label: 'CO₂ Max', name: 'co2_max', value: boundary?.co2_max ?? '', type: 'ppm' },
-              { label: 'CO₂ Max Warning', name: 'co2_max_warn', value: boundary?.co2_max_warn ?? '', type: 'ppm' }
+              'temperature_min_warn',
+              'temperature_max_warn',
+              'humidity_min',
+              'humidity_min_warn',
+              'humidity_max',
+              'humidity_max_warn',
+              'co2_max',
+              'co2_max_warn',
+              'lights_on',
+              'lights_off'
             ]}
           />
         )}

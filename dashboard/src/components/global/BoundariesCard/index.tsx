@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, KeyboardEvent } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import Stack from '@mui/material/Stack'
@@ -19,41 +19,72 @@ import EditIcon from '@mui/icons-material/Edit'
 
 import Card from '@/components/global/Card'
 import { maskNumberInput } from '@/libs/forms'
+import { Boundary } from '@/interfaces/Boundary'
 
 import useResolver from './hooks/useResolver'
 
 export interface BoundariesCardProps {
-  boundaries: Boundary[]
+  boundaries: Array<keyof Boundary>
+  boundary: Boundary | null
   heading?: string
 }
 
-export interface Boundary {
+export interface BoundaryType {
   label: string
-  name: string
-  value: string | number
+  name: keyof Boundary
   type: 'percentage' | 'ppm' | 'temperature' | 'time'
 }
 
-const units: Record<Boundary['type'], string> = {
+const units: Record<BoundaryType['type'], string> = {
   percentage: '%',
   ppm: 'ppm',
   temperature: '°F',
   time: ''
 }
 
-export default function BoundariesCard({ boundaries, heading }: BoundariesCardProps) {
+export default function BoundariesCard({ boundaries, boundary, heading }: BoundariesCardProps) {
   const [editing, setEditing] = useState(false)
+  const [loading, setLoading] = useState(false)
 
-  const defaultValues = boundaries.reduce((vals, boundary) => ({
-    ...vals,
-    [boundary.name]: boundary.value.toString()
-  }), {} as Record<string, string>)
+  const boundaryFields = [
+    { label: 'Humidity Min', name: 'humidity_min', type: 'percentage' },
+    { label: 'Humidity Max', name: 'humidity_max', type: 'percentage' },
+    { label: 'Humidity Min', name: 'humidity_min_warn', type: 'percentage' },
+    { label: 'Humidity Max', name: 'humidity_max_warn', type: 'percentage' },
+    { label: 'CO₂ Max', name: 'co2_max', type: 'ppm' },
+    { label: 'CO₂ Max', name: 'co2_max_warn', type: 'ppm' },
+    { label: 'Temperature Min', name: 'temperature_min_warn', type: 'temperature' },
+    { label: 'Temperature Max', name: 'temperature_max_warn', type: 'temperature' },
+    { label: 'Lights On', name: 'lights_on', type: 'time' },
+    { label: 'Lights Off', name: 'lights_off', type: 'time' }
+  ].filter(f => boundaries.includes(f.name as keyof Boundary)) as BoundaryType[]
+
+  const defaultValues = boundaryFields.reduce((vals, b) => ({
+    ...vals, [b.name]: boundary?.[b.name] ?? ''
+  }), {} as Record<keyof Boundary, string>)
   
   const resolver = useResolver(boundaries)
   const { register, handleSubmit, getValues } = useForm<Record<string, string>>({ defaultValues, resolver })
 
   const handleSave = async (values: Record<string, string>) => {
-    setEditing(false)
+    setLoading(true)
+    try {
+      const response = await fetch(`/api/boundaries/${boundary?.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(values)
+      })
+      
+      if (response.ok) {
+        setEditing(false)
+      } else {
+        console.error('Failed to update boundary:', response.statusText)
+      }
+    } catch (error) {
+      console.error('Error updating boundary:', error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return <Card sx={{ minWidth: '33.33%' }}>
@@ -73,31 +104,31 @@ export default function BoundariesCard({ boundaries, heading }: BoundariesCardPr
               </TableRow>
             </TableHead>}
             <TableBody>
-              {boundaries.map((boundary, i) =>
+              {boundaryFields.map((b, i) =>
                 <TableRow key={i}>
                   <TableCell sx={{ width: '50%', ...editing ? { py: 0.81, borderBottom: 'none' } : {} }}>
-                    {boundary.label}
+                    {b.label}
                   </TableCell>
                   <TableCell sx={{ pl: 1.5, ...editing ? { py: 0.81, pl: 0, borderBottom: 'none' } : {} }}>
                     {editing
                       ? <TextField
-                          {...register(boundary.name, { required: true })}
-                          onKeyDown={e => maskNumberInput(e, getValues(boundary.name))}
+                          {...register(b.name, { required: true })}
+                          onKeyDown={e => maskNumberInput(e, getValues(b.name))}
                           size="small"
                           slotProps={{
                             input: {
-                              endAdornment: units[boundary.type] &&
-                                <InputAdornment position="end">{units[boundary.type]}</InputAdornment>
+                              endAdornment: units[b.type] &&
+                                <InputAdornment position="end">{units[b.type]}</InputAdornment>
                             }
                           }}
                         />
-                      : `${boundary.value}${units[boundary.type]}`}
+                      : `${boundary?.[b.name] ?? ''}${units[b.type]}`}
                   </TableCell>
                 </TableRow>)}
             </TableBody>
           </Table>
           {editing &&
-            <Button variant="contained" type="submit" loading={false} disableRipple>Save</Button>}
+            <Button variant="contained" type="submit" loading={loading} disableRipple>Save</Button>}
       </Stack>
     </form>
   </Card>

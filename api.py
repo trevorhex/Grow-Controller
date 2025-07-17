@@ -66,14 +66,23 @@ def flushes():
 #
 # PATCH /boundaries/<int:boundary_id>
 #
+@app.route('/boundaries/current', methods=['PATCH'])
 @app.route('/boundaries/<int:boundary_id>', methods=['PATCH'])
-def update_boundary(boundary_id):
+def update_boundary(boundary_id=None):
   conn = create_connection()
   try:
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM boundaries WHERE id = ?', (boundary_id,))
-    boundary_row = cursor.fetchone()
 
+    if boundary_id is None:
+      cursor.execute('SELECT id FROM boundaries WHERE current = 1')
+      boundary_row = cursor.fetchone()
+      if not boundary_row:
+        return jsonify({ 'error': 'No current boundary found' }), 404
+      boundary_id = boundary_row['id']
+
+    cursor.execute('SELECT * FROM boundaries WHERE id = ?', (boundary_id,))
+
+    boundary_row = cursor.fetchone()
     if not boundary_row:
       return jsonify({ 'error': 'Boundary not found' }), 404
 
@@ -85,10 +94,10 @@ def update_boundary(boundary_id):
 
     updates = { key: value for key, value in request.json.items() if key in allowed_fields }
 
-    set_clause = ', '.join([f"{key} = ?" for key in updates.keys()])
+    fields = ', '.join([f"{key} = ?" for key in updates.keys()])
     values = list(updates.values()) + [boundary_id]
-    
-    cursor.execute(f'UPDATE boundaries SET {set_clause} WHERE id = ?', values)
+
+    cursor.execute(f'UPDATE boundaries SET {fields} WHERE id = ?', values)
     conn.commit()
 
     cursor.execute('SELECT * FROM boundaries WHERE id = ?', (boundary_id,))
