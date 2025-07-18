@@ -81,3 +81,4 @@ except Exception as e:
   print(f"An error occurred: {str(e)}")
 finally:
   conn.close()
+  relay_all_off()
