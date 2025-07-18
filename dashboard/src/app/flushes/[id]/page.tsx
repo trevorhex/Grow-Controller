@@ -82,14 +82,15 @@ export default function FlushPage() {
             heading="Environmental Boundaries"
             boundary={boundary}
             boundaries={[
+              'humidifier_on',
+              'humidifier_off',
+              'humidity_min_warn',
+              'humidity_max_warn',
+              'fan_on',
+              'fan_off',
+              'co2_max_warn',
               'temperature_min_warn',
               'temperature_max_warn',
-              'humidity_min',
-              'humidity_min_warn',
-              'humidity_max',
-              'humidity_max_warn',
-              'co2_max',
-              'co2_max_warn',
               'lights_on',
               'lights_off'
             ]}

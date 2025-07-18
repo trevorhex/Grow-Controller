@@ -21,7 +21,7 @@ def get_flush():
         f.*, b.id as boundary_id, b.stage,
         b.humidifier_on, b.humidifier_off, b.humidity_min_warn, b.humidity_max_warn,
         b.fan_on, b.fan_off, b.co2_max_warn, b.lights_on, b.lights_off,
-        b.temperature_min_warn, b.temperature_max_warn,
+        b.temperature_min_warn, b.temperature_max_warn
       FROM flushes f
       LEFT JOIN boundaries b ON f.id = b.flush_id
       WHERE f.current = 1;

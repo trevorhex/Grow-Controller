@@ -10,7 +10,7 @@ import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 
 import Card from '@/components/global/Card'
-import { Flush } from '@/interfaces/Flush'
+import { Flush, Stage } from '@/interfaces/Flush'
 
 export interface StatusCardProps {
   flush: Flush
@@ -49,7 +49,7 @@ export default function StatusCard({ flush }: StatusCardProps) {
           </TableRow>
           <TableRow>
             <TableCell>Stage</TableCell>
-            <TableCell>{flush.stage}</TableCell>
+            <TableCell>{flush.stage === Stage.Pinning ? 'Pinning' : 'Fruiting'}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Started</TableCell>

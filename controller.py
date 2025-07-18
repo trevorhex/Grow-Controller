@@ -19,6 +19,9 @@ try:
   flush = flush_data['flush']
   boundary = flush_data['boundary']
 
+  print("Starting flush:", flush)
+  print("Boundary conditions:", boundary)
+
   def control_humidifier(humidity):
     if humidity < boundary['humidifier_on']:
       relay_on(HUMIDIFIER_RELAY)
@@ -51,10 +54,6 @@ try:
     print("No current flush found.")
     exit(1)
 
-  if boundary:
-    print(f"Humidity range: {boundary['humidity_min']}% - {boundary['humidity_max']}%")
-    print(f"CO₂ max: {boundary['co2_max']} ppm")
-  
   while True:
     if sensor.data_ready:
       humidity = sensor.relative_humidity
