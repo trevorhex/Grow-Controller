@@ -7,7 +7,6 @@ interface Params {
   params: { id: string }
 }
 
-
 export async function PATCH(request: NextRequest, { params }: Params) {
   try {
     const response = await fetch(`${API_URL}${ROUTES.BOUNDARIES}/${params.id}`, {

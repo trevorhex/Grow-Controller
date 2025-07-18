@@ -64,9 +64,9 @@ export default function BoundariesCard({ boundaries, boundary, heading }: Bounda
   }), {} as Record<keyof Boundary, string>)
   
   const resolver = useResolver(boundaries)
-  const { register, handleSubmit, getValues } = useForm<Record<string, string>>({ defaultValues, resolver })
+  const { register, handleSubmit, getValues, reset } = useForm<Record<string, string>>({ defaultValues, resolver })
 
-  const handleSave = async (values: Record<string, string>) => {
+  const handleSave = async (values: Record<keyof Boundary, string>) => {
     setLoading(true)
     try {
       const response = await fetch(`/api/boundaries/${boundary?.id}`, {
@@ -76,6 +76,7 @@ export default function BoundariesCard({ boundaries, boundary, heading }: Bounda
       })
       
       if (response.ok) {
+        reset(values)
         setEditing(false)
       } else {
         console.error('Failed to update boundary:', response.statusText)
@@ -122,7 +123,7 @@ export default function BoundariesCard({ boundaries, boundary, heading }: Bounda
                             }
                           }}
                         />
-                      : `${boundary?.[b.name] ?? ''}${units[b.type]}`}
+                      : `${getValues(b.name) ?? ''}${units[b.type]}`}
                   </TableCell>
                 </TableRow>)}
             </TableBody>

@@ -66,7 +66,6 @@ def flushes():
 #
 # PATCH /boundaries/<int:boundary_id>
 #
-@app.route('/boundaries/current', methods=['PATCH'])
 @app.route('/boundaries/<int:boundary_id>', methods=['PATCH'])
 def update_boundary(boundary_id=None):
   conn = create_connection()
