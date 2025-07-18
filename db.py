@@ -95,7 +95,7 @@ if args.s:
         lights_off,
         stage,
         flush_id
-      ) VALUES (75.0, 85.0, 70.0, 90.0, 1200, 1000, 70.0, 95.0, "2025-07-14 08:00:00", "2025-07-14 20:00:00", "pinning", 1);
+      ) VALUES (75.0, 85.0, 70.0, 90.0, 1200, 1000, 1500, 70.0, 95.0, "2025-07-14 08:00:00", "2025-07-14 20:00:00", "pinning", 1);
     ''')
     cursor.executemany('INSERT INTO warnings (flush_id, type, value, stage) VALUES (?, ?, ?, ?);', (
       (1, 'humidity', 59.8, 'pinning'),
