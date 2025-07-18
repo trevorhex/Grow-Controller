@@ -11,6 +11,7 @@ import BoundariesCard from '@/components/global/BoundariesCard'
 export default async function IndexPage() {
   const response = await fetch(`${API_URL}/flushes/current`)
   const flush: Flush = await response.json()
+  console.log('Flush data:', flush)
 
   if (!flush) {
     return <Main>

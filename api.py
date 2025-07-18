@@ -25,7 +25,6 @@ def flush(flush_id=None):
 
     flush_data = dict(flush_row)
     flush_id = flush_data['id']
-    print(f"Flush: {flush_data}")
     
     cursor.execute('SELECT * FROM readings WHERE flush_id = ? ORDER BY timestamp', (flush_id,))
     readings_rows = cursor.fetchall()
@@ -35,11 +34,10 @@ def flush(flush_id=None):
     boundary_row = cursor.fetchone()
     boundary_data = dict(boundary_row) if boundary_row else None
 
-    return jsonify({
-      'flush': flush_data,
-      'readings': readings_data,
-      'boundary': boundary_data
-    })
+    flush_data['readings'] = readings_data
+    flush_data['boundary'] = boundary_data
+
+    return jsonify(flush_data)
   except Exception as e:
     print(f"An error occurred: {str(e)}")
     return jsonify({ 'error': str(e) }), 500
