@@ -10,6 +10,7 @@ sensor.start_periodic_measurement()
 HUMIDIFIER_RELAY = 1
 FAN_RELAY = 2
 LIGHT_RELAY = 3
+INSERT_DELAY_MINUTES = 1
 
 try:
   conn = create_connection()
@@ -51,8 +52,10 @@ try:
       save_warning(temp, 'Temperature too high', flush_id)
 
   if not flush:
-    print("No current flush found.")
+    print('No current flush found.')
     exit(1)
+
+  last_insert_time = 0
 
   while True:
     if sensor.data_ready:
@@ -71,11 +74,14 @@ try:
         check_co2_warning(co2, flush['id'])
         check_temperature_warning(temp, flush['id'])
 
-      cursor.execute("INSERT INTO readings (co2, temperature, humidity, flush_id) VALUES (?, ?, ?, ?);", 
-                     (co2, temp, humidity, flush['id']))
-      conn.commit()
+      current_time = time.time()
+      if current_time - last_insert_time >= 60 * INSERT_DELAY_MINUTES:
+        cursor.execute('INSERT INTO readings (co2, temperature, humidity, flush_id) VALUES (?, ?, ?, ?);', 
+                       (co2, temp, humidity, flush['id']))
+        conn.commit()
+        last_insert_time = current_time
 
-    time.sleep(30)
+    time.sleep(15)
 
 except Exception as e:
   print(f"An error occurred: {str(e)}")
