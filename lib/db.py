@@ -18,9 +18,10 @@ def get_flush():
     
     cursor.execute('''
       SELECT 
-        f.*, b.id as boundary_id, b.temperature_min_warn, b.temperature_max_warn,
-        b.humidity_min, b.humidity_min_warn, b.humidity_max, b.humidity_max_warn,
-        b.co2_max, b.co2_max_warn
+        f.*, b.id as boundary_id, b.stage,
+        b.humidifier_on, b.humidifier_off, b.humidity_min_warn, b.humidity_max_warn,
+        b.fan_on, b.fan_off, b.co2_max_warn, b.lights_on, b.lights_off,
+        b.temperature_min_warn, b.temperature_max_warn,
       FROM flushes f
       LEFT JOIN boundaries b ON f.id = b.flush_id
       WHERE f.current = 1;
@@ -47,15 +48,19 @@ def get_flush():
   if data['boundary_id']:
     boundary_data = {
       'id': data['boundary_id'],
-      'temperature_min_warn': data['temperature_min_warn'],
-      'temperature_max_warn': data['temperature_max_warn'],
-      'humidity_min': data['humidity_min'],
+      'stage': data['stage'],
+      'flush_id': data['id'],
+      'humidifier_on': data['humidifier_on'],
+      'humidifier_off': data['humidifier_off'],
       'humidity_min_warn': data['humidity_min_warn'],
-      'humidity_max': data['humidity_max'],
       'humidity_max_warn': data['humidity_max_warn'],
-      'co2_max': data['co2_max'],
+      'fan_on': data['fan_on'],
+      'fan_off': data['fan_off'],
       'co2_max_warn': data['co2_max_warn'],
-      'flush_id': data['id']
+      'lights_on': data['lights_on'],
+      'lights_off': data['lights_off'],
+      'temperature_min_warn': data['temperature_min_warn'],
+      'temperature_max_warn': data['temperature_max_warn']
     }
 
   return { 'flush': flush_data, 'boundary': boundary_data }
