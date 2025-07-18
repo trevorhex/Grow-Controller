@@ -1,12 +1,8 @@
 from flask import Flask, jsonify, request
 import sqlite3
+from lib.db import *
 
 app = Flask(__name__)
-
-def create_connection():
-  conn = sqlite3.connect('data.db')
-  conn.row_factory = sqlite3.Row
-  return conn
 
 #
 # GET /flush or GET /flush/:flush_id
@@ -86,9 +82,9 @@ def update_boundary(boundary_id=None):
       return jsonify({ 'error': 'Boundary not found' }), 404
 
     allowed_fields = {
+      'humidifier_on', 'humidifier_off', 'humidity_min_warn', 'humidity_max_warn',
+      'fan_on', 'fan_off', 'co2_max', 'co2_max_warn',
       'temperature_min_warn', 'temperature_max_warn',
-      'humidity_min', 'humidity_min_warn', 'humidity_max', 'humidity_max_warn',
-      'co2_max', 'co2_max_warn'
     }
 
     updates = { key: value for key, value in request.json.items() if key in allowed_fields }

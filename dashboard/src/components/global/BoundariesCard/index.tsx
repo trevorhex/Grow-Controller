@@ -47,11 +47,12 @@ export default function BoundariesCard({ boundaries, boundary, heading }: Bounda
   const [loading, setLoading] = useState(false)
 
   const boundaryFields = [
-    { label: 'Humidity Min', name: 'humidity_min', type: 'percentage' },
-    { label: 'Humidity Max', name: 'humidity_max', type: 'percentage' },
+    { label: 'Humidifier On', name: 'humidifier_on', type: 'percentage' },
+    { label: 'Humidifier Off', name: 'humidifier_off', type: 'percentage' },
     { label: 'Humidity Min', name: 'humidity_min_warn', type: 'percentage' },
     { label: 'Humidity Max', name: 'humidity_max_warn', type: 'percentage' },
-    { label: 'CO₂ Max', name: 'co2_max', type: 'ppm' },
+    { label: 'Fan On', name: 'fan_on', type: 'ppm' },
+    { label: 'Fan Off', name: 'fan_off', type: 'ppm' },
     { label: 'CO₂ Max', name: 'co2_max_warn', type: 'ppm' },
     { label: 'Temperature Min', name: 'temperature_min_warn', type: 'temperature' },
     { label: 'Temperature Max', name: 'temperature_max_warn', type: 'temperature' },
@@ -76,6 +77,7 @@ export default function BoundariesCard({ boundaries, boundary, heading }: Bounda
       })
       
       if (response.ok) {
+        console.log(response)
         reset(values)
         setEditing(false)
       } else {

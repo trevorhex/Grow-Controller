@@ -10,3 +10,8 @@ export interface Flush {
   readings: Reading[]
   boundary: Boundary | null
 }
+
+export enum Stage {
+  Pinning = 'pinning',
+  Fruiting = 'fruiting'
+}

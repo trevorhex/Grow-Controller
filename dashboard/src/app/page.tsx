@@ -9,7 +9,7 @@ import StatusCard from '@/components/global/StatusCard'
 import BoundariesCard from '@/components/global/BoundariesCard'
 
 export default async function IndexPage() {
-  const response = await fetch(`${API_URL}/flushes/current`)
+  const response = await fetch(`${API_URL}/flushes`)
   const flush: Flush = await response.json()
 
   if (!flush) {

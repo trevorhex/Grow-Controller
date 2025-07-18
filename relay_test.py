@@ -1,5 +1,5 @@
 import time
-from relay_lib import *
+from lib.relay import *
 
 try:
   relay_all_on()
