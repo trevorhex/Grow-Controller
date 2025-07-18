@@ -69,16 +69,16 @@ cursor.execute('''
 if args.s:
   try:
     cursor.execute('INSERT INTO flushes (start_datetime, stage, active, current) VALUES ("2025-07-14 08:00:00", "pinning", 0, 1);')
-    cursor.executemany('INSERT INTO readings (temperature, humidity, co2, stage, flush_id) VALUES (?, ?, ?, ?, ?);', (
-      (82.5, 70.1, 1220, "pinning", 1),
-      (83.4, 66.0, 1210, "pinning", 1),
-      (81.2, 59.8, 1182, "pinning", 1),
-      (78.0, 69.3, 1100, "pinning", 1),
-      (64.3, 73.0, 1065, "pinning", 1),
-      (60.3, 78.7, 1043, "pinning", 1),
-      (61.6, 76.4, 998, "pinning", 1),
-      (65.6, 75.9, 997, "pinning", 1),
-      (70.7, 76.0, 998, "pinning", 1)
+    cursor.executemany('INSERT INTO readings (temperature, humidity, co2, stage, flush_id, timestamp) VALUES (?, ?, ?, ?, ?, ?);', (
+      (82.5, 70.1, 1220, "pinning", 1, "2025-07-14 08:00:00"),
+      (83.4, 66.0, 1210, "pinning", 1, "2025-07-14 08:01:00"),
+      (81.2, 59.8, 1182, "pinning", 1, "2025-07-14 08:02:00"),
+      (78.0, 69.3, 1100, "pinning", 1, "2025-07-14 08:03:00"),
+      (64.3, 73.0, 1065, "pinning", 1, "2025-07-14 08:04:00"),
+      (60.3, 78.7, 1043, "pinning", 1, "2025-07-14 08:05:00"),
+      (61.6, 76.4, 998, "pinning", 1, "2025-07-14 08:06:00"),
+      (65.6, 75.9, 997, "pinning", 1, "2025-07-14 08:07:00"),
+      (70.7, 76.0, 998, "pinning", 1, "2025-07-14 08:08:00")
     ))
     cursor.execute('''
       INSERT INTO boundaries (

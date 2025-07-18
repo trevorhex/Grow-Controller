@@ -9,7 +9,7 @@ import StatusCard from '@/components/global/StatusCard'
 import BoundariesCard from '@/components/global/BoundariesCard'
 
 export default async function IndexPage() {
-  const response = await fetch(`${API_URL}/flushes`)
+  const response = await fetch(`${API_URL}/flushes/current`)
   const flush: Flush = await response.json()
 
   if (!flush) {
@@ -26,9 +26,10 @@ export default async function IndexPage() {
           heading="Relay Boundaries"
           boundary={flush.boundary}
           boundaries={[
-            'humidity_min',
-            'humidity_max',
-            'co2_max',
+            'humidifier_on',
+            'humidifier_off',
+            'fan_on',
+            'fan_off',
             'lights_on',
             'lights_off'
           ]}
@@ -45,7 +46,7 @@ export default async function IndexPage() {
           ]}
         />
       </Stack>
-      {flush.readings.length > 0 && <Graph title="Trends" readings={flush.readings} />}
+      {flush.readings?.length > 0 && <Graph title="Trends" readings={flush.readings} />}
     </Stack>
   </Main>
 }
