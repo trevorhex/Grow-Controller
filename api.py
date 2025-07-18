@@ -25,6 +25,7 @@ def flush(flush_id=None):
 
     flush_data = dict(flush_row)
     flush_id = flush_data['id']
+    print(f"Flush: {flush_data}")
     
     cursor.execute('SELECT * FROM readings WHERE flush_id = ? ORDER BY timestamp', (flush_id,))
     readings_rows = cursor.fetchall()

@@ -9,6 +9,7 @@ export interface Flush {
   current: number
   readings: Reading[]
   boundary: Boundary | null
+  stage: Stage
 }
 
 export enum Stage {

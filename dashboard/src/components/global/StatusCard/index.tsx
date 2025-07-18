@@ -48,6 +48,10 @@ export default function StatusCard({ flush }: StatusCardProps) {
             <TableCell>{active ? 'Active' : 'Inactive'}</TableCell>
           </TableRow>
           <TableRow>
+            <TableCell>Stage</TableCell>
+            <TableCell>{flush.stage}</TableCell>
+          </TableRow>
+          <TableRow>
             <TableCell>Started</TableCell>
             <TableCell>{flush.start_datetime?.toLocaleString() ?? '--'}</TableCell>
           </TableRow>
