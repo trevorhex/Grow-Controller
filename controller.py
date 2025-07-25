@@ -3,6 +3,7 @@ import board
 import adafruit_scd4x
 from lib.relay import *
 from lib.db import *
+from datetime import datetime
 
 sensor = adafruit_scd4x.SCD4X(board.I2C())
 sensor.start_periodic_measurement()
@@ -23,6 +24,9 @@ try:
   print("Starting flush:", flush)
   print("Boundary conditions:", boundary)
 
+  #
+  # Control relays
+  #
   def control_humidifier(humidity):
     if humidity < boundary['humidifier_on']:
       relay_on(HUMIDIFIER_RELAY)
@@ -35,6 +39,19 @@ try:
     elif co2 < boundary['fan_off']:
       relay_off(FAN_RELAY)
 
+  def control_lights():
+    current_time = datetime.now().time()
+    lights_on_time = datetime.strptime(boundary['lights_on'], '%H:%M').time()
+    lights_off_time = datetime.strptime(boundary['lights_off'], '%H:%M').time()
+
+    if current_time >= lights_on_time and current_time < lights_off_time:
+      relay_on(LIGHT_RELAY)
+    else:
+      relay_off(LIGHT_RELAY)
+
+  #
+  # Check for warnings
+  #
   def check_humidity_warning(humidity, flush_id):
     if humidity < boundary['humidity_min_warn']:
       save_warning(humidity, 'Humidity too low', flush_id)
@@ -70,6 +87,7 @@ try:
       if boundary:  
         control_humidifier(humidity)
         control_fan(co2)
+        control_lights()
         check_humidity_warning(humidity, flush['id'])
         check_co2_warning(co2, flush['id'])
         check_temperature_warning(temp, flush['id'])
