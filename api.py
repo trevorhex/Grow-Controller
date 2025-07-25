@@ -21,7 +21,7 @@ def flush(flush_id=None):
     
     flush_row = cursor.fetchone() 
     if not flush_row:
-      return jsonify({ 'error': 'No flush found' }), 404
+      return jsonify({ 'error': 'No flush found' })
 
     flush_data = dict(flush_row)
     flush_id = flush_data['id']
@@ -57,6 +57,23 @@ def flushes():
     return jsonify([dict(row) for row in rows])
   finally:
     conn.close()
+
+#
+# GET /flushes/new
+#
+@app.route('/flushes/new', methods=['GET'])
+def new_flush():
+  conn = create_connection()
+  try:
+    cursor = conn.cursor()
+    # TODO: create new flush record
+    return jsonify({ 'message': 'New flush created' }), 201
+  except Exception as e:
+    print(f"An error occurred: {str(e)}")
+    return jsonify({ 'error': str(e) }), 500
+  finally:
+    conn.close()
+
 
 #
 # PATCH /boundaries/<int:boundary_id>

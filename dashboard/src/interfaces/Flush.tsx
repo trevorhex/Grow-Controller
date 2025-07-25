@@ -16,3 +16,7 @@ export enum Stage {
   Pinning = 'pinning',
   Fruiting = 'fruiting'
 }
+
+export interface FlushData extends Flush {
+  error?: string
+}
