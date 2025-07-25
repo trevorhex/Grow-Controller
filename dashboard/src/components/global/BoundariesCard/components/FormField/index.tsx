@@ -10,24 +10,26 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker'
 
 import { maskNumberInput } from '@/libs/forms'
 
-import { BoundaryTypeType } from '../../index'
+import { BoundaryType } from '../../interfaces'
 
 export interface FormFieldProps {
-  form: UseFormReturn<Record<string, string>>
+  form: UseFormReturn<Record<string, string | number>>
   name: string
-  type: BoundaryTypeType
+  type: BoundaryType
   units: string
   required?: boolean
 }
 
-export default function FormField({ name, form: { register, getValues, setValue, watch }, units, type, required = false }: FormFieldProps) {
-  if (type === BoundaryTypeType.Time) {
+export default function FormField({ name, form, units, type, required = false }: FormFieldProps) {
+  const { register, getValues, setValue, watch } = form
+
+  if (type === BoundaryType.Time) {
     const value = watch(name)
     return <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale="en-us">
       <TimePicker
         {...register(name, { required })}
         onChange={val => setValue(name, val?.toISO() ?? '')}
-        value={value ? DateTime.fromISO(value.replace(' ', 'T')) : null}
+        value={value ? DateTime.fromISO(value.toString()) : null}
         slotProps={{ textField: { size: 'small' } }}
       />
     </LocalizationProvider>
@@ -36,7 +38,7 @@ export default function FormField({ name, form: { register, getValues, setValue,
   return (
     <TextField
       {...register(name, { required })}
-      onKeyDown={e => maskNumberInput(e, getValues(name))}
+      onKeyDown={e => maskNumberInput(e, getValues(name).toString())}
       size="small"
       slotProps={{
         input: {

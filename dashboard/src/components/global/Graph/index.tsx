@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon'
+
 import { LineChart } from '@mui/x-charts/LineChart'
 import Typography from '@mui/material/Typography'
 import Stack from '@mui/material/Stack'
@@ -18,12 +20,8 @@ export default function Graph({ title, readings = [] }: GraphProps) {
       {title && <Typography variant="h2" textAlign="center">{title}</Typography>}
       <LineChart
         xAxis={[{ 
-          data: readings.map(reading => (new Date(reading.timestamp)).toLocaleString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-          })),
+          data: readings.map(reading =>
+            DateTime.fromISO(reading.timestamp.replace(' ', 'T')).toLocaleString(DateTime.DATETIME_MED)),
           scaleType: 'point'
         }]}
         series={[{ 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { DateTime } from 'luxon'
 
@@ -21,33 +21,19 @@ import { Boundary } from '@/interfaces/Boundary'
 
 import useResolver from './hooks/useResolver'
 import FormField from './components/FormField'
+import { BoundaryView, BoundaryType, BoundariesForm, BoundariesFormFields } from './interfaces'
 
 export interface BoundariesCardProps {
-  boundaries: Array<keyof Boundary>
+  boundaries: Array<keyof BoundariesFormFields>
   boundary: Boundary | null
   heading?: string
 }
 
-export enum BoundaryTypeType {
-  Percentage = 'percentage',
-  PPM = 'ppm',
-  Temperature = 'temperature',
-  Time = 'time'
-}
-
-export interface BoundaryType {
-  label: string
-  name: keyof Boundary
-  type: BoundaryTypeType
-}
-
-export type BoundariesFormType = Record<string, string>
-
-const units: Record<BoundaryTypeType, string> = {
-  [BoundaryTypeType.Percentage]: '%',
-  [BoundaryTypeType.PPM]: 'ppm',
-  [BoundaryTypeType.Temperature]: '°F',
-  [BoundaryTypeType.Time]: ''
+const units: Record<BoundaryType, string> = {
+  [BoundaryType.Percentage]: '%',
+  [BoundaryType.PPM]: 'ppm',
+  [BoundaryType.Temperature]: '°F',
+  [BoundaryType.Time]: ''
 }
 
 export default function BoundariesCard({ boundaries, boundary, heading }: BoundariesCardProps) {
@@ -55,39 +41,49 @@ export default function BoundariesCard({ boundaries, boundary, heading }: Bounda
   const [loading, setLoading] = useState(false)
 
   const boundaryFields = [
-    { label: 'Humidifier On', name: 'humidifier_on', type: 'percentage' },
-    { label: 'Humidifier Off', name: 'humidifier_off', type: 'percentage' },
-    { label: 'Humidity Min', name: 'humidity_min_warn', type: 'percentage' },
-    { label: 'Humidity Max', name: 'humidity_max_warn', type: 'percentage' },
-    { label: 'Fan On', name: 'fan_on', type: 'ppm' },
-    { label: 'Fan Off', name: 'fan_off', type: 'ppm' },
-    { label: 'CO₂ Max', name: 'co2_max_warn', type: 'ppm' },
-    { label: 'Temperature Min', name: 'temperature_min_warn', type: 'temperature' },
-    { label: 'Temperature Max', name: 'temperature_max_warn', type: 'temperature' },
-    { label: 'Lights On', name: 'lights_on', type: 'time' },
-    { label: 'Lights Off', name: 'lights_off', type: 'time' }
-  ].filter(f => boundaries.includes(f.name as keyof Boundary)) as BoundaryType[]
+    { label: 'Humidifier On', name: 'humidifier_on', type: BoundaryType.Percentage },
+    { label: 'Humidifier Off', name: 'humidifier_off', type: BoundaryType.Percentage },
+    { label: 'Humidity Min', name: 'humidity_min_warn', type: BoundaryType.Percentage },
+    { label: 'Humidity Max', name: 'humidity_max_warn', type: BoundaryType.Percentage },
+    { label: 'Fan On', name: 'fan_on', type: BoundaryType.PPM },
+    { label: 'Fan Off', name: 'fan_off', type: BoundaryType.PPM },
+    { label: 'CO₂ Max', name: 'co2_max_warn', type: BoundaryType.PPM },
+    { label: 'Temperature Min', name: 'temperature_min_warn', type: BoundaryType.Temperature },
+    { label: 'Temperature Max', name: 'temperature_max_warn', type: BoundaryType.Temperature },
+    { label: 'Lights On', name: 'lights_on', type: BoundaryType.Time },
+    { label: 'Lights Off', name: 'lights_off', type: BoundaryType.Time }
+  ].filter(f => boundaries.includes(f.name as keyof BoundariesFormFields)) as BoundaryView[]
 
   const defaultValues = boundaryFields.reduce((vals, b) => ({
-    ...vals, [b.name]: boundary?.[b.name] ?? ''
-  }), {} as Record<keyof Boundary, string>)
-  
+    ...vals, [b.name]: boundary?.[b.name]?.toString() ?? ''
+  }), {} as Record<keyof BoundariesFormFields, string>)
+
   const resolver = useResolver()
-  const form = useForm<BoundariesFormType>({ defaultValues, resolver })
+  const form = useForm<BoundariesForm>({ defaultValues, resolver })
   const { handleSubmit, getValues, reset } = form
 
-  const handleSave = async (values: BoundariesFormType) => {
+  const formatValues = (values: BoundariesForm) => {
+    Object.keys(values).forEach(key => {
+      const parseValue = key.includes('co2') || key.includes('fan') ? parseInt : parseFloat
+      const value = values[key as keyof BoundariesForm]?.toString() ?? '0'
+
+      if (!key.includes('lights')) {
+        values[key as keyof BoundariesForm] = parseValue(value)
+      }
+    })
+    return JSON.stringify(values)
+  }
+
+  const handleSave = async (values: BoundariesForm) => {
     setLoading(true)
-    console.log(values, JSON.stringify(values))
     try {
       const response = await fetch(`/api/boundaries/${boundary?.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values)
+        body: formatValues(values)
       })
       
       if (response.ok) {
-        console.log(response)
         reset(values)
         setEditing(false)
       } else {
@@ -100,10 +96,10 @@ export default function BoundariesCard({ boundaries, boundary, heading }: Bounda
     }
   }
 
-  const getValue = (name: keyof Boundary, type: BoundaryTypeType) => {
+  const getValue = (name: keyof BoundariesFormFields, type: BoundaryType) => {
     const value = getValues(name)
-    return value && type === BoundaryTypeType.Time
-      ? DateTime.fromISO(value.replace(' ', 'T')).toLocaleString(DateTime.TIME_SIMPLE)
+    return value && type === BoundaryType.Time
+      ? DateTime.fromISO(value.toString()).toLocaleString(DateTime.TIME_SIMPLE)
       : `${value}${units[type]}`
   }
 

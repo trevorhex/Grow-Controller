@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { DateTime } from 'luxon'
 
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
@@ -18,6 +19,10 @@ export interface StatusCardProps {
 
 export default function StatusCard({ flush }: StatusCardProps) {
   const [active, setActive] = useState(!!flush.active)
+
+  const formatDate = (dateString?: string | Date) => dateString
+    ? DateTime.fromISO(dateString.toString().replace(' ', 'T')).toLocaleString(DateTime.DATETIME_MED)
+    : '--'
 
   return <Card title="Status" sx={{ minWidth: '33.33%' }}>
     <Stack gap={2}>
@@ -53,11 +58,11 @@ export default function StatusCard({ flush }: StatusCardProps) {
           </TableRow>
           <TableRow>
             <TableCell>Started</TableCell>
-            <TableCell>{flush.start_datetime?.toLocaleString() ?? '--'}</TableCell>
+            <TableCell>{formatDate(flush.start_datetime)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Ended</TableCell>
-            <TableCell>{flush.end_datetime?.toLocaleString() ?? '--'}</TableCell>
+            <TableCell>{formatDate(flush.end_datetime)}</TableCell>
           </TableRow>
         </TableBody>
       </Table>

@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon'
+
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Stack from '@mui/material/Stack'
@@ -25,16 +27,8 @@ export default function DetailsSection({ flush, readings }: DetailsSectionProps)
     return 'Completed'
   }
 
-  const formatDate = (dateString: string | Date) => {
-    return new Date(dateString).toLocaleString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
-  }
+  const formatDate = (dateString: string | Date) =>
+    DateTime.fromISO(dateString.toString()).toLocaleString(DateTime.DATETIME_MED)
 
   return (
     <Card>
