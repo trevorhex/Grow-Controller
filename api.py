@@ -84,6 +84,7 @@ def update_boundary(boundary_id=None):
       'humidifier_on', 'humidifier_off', 'humidity_min_warn', 'humidity_max_warn',
       'fan_on', 'fan_off', 'co2_max', 'co2_max_warn',
       'temperature_min_warn', 'temperature_max_warn',
+      'lights_on', 'lights_off', 'stage'
     }
 
     updates = { key: value for key, value in request.json.items() if key in allowed_fields }

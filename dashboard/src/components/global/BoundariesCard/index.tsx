@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { DateTime } from 'luxon'
 
 import Stack from '@mui/material/Stack'
 import Table from '@mui/material/Table'
@@ -11,17 +12,15 @@ import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
-import InputAdornment from '@mui/material/InputAdornment'
 import Typography from '@mui/material/Typography'
 import CloseIcon from '@mui/icons-material/Close'
 import EditIcon from '@mui/icons-material/Edit'
 
 import Card from '@/components/global/Card'
-import { maskNumberInput } from '@/libs/forms'
 import { Boundary } from '@/interfaces/Boundary'
 
 import useResolver from './hooks/useResolver'
+import FormField from './components/FormField'
 
 export interface BoundariesCardProps {
   boundaries: Array<keyof Boundary>
@@ -29,17 +28,26 @@ export interface BoundariesCardProps {
   heading?: string
 }
 
+export enum BoundaryTypeType {
+  Percentage = 'percentage',
+  PPM = 'ppm',
+  Temperature = 'temperature',
+  Time = 'time'
+}
+
 export interface BoundaryType {
   label: string
   name: keyof Boundary
-  type: 'percentage' | 'ppm' | 'temperature' | 'time'
+  type: BoundaryTypeType
 }
 
-const units: Record<BoundaryType['type'], string> = {
-  percentage: '%',
-  ppm: 'ppm',
-  temperature: '°F',
-  time: ''
+export type BoundariesFormType = Record<string, string>
+
+const units: Record<BoundaryTypeType, string> = {
+  [BoundaryTypeType.Percentage]: '%',
+  [BoundaryTypeType.PPM]: 'ppm',
+  [BoundaryTypeType.Temperature]: '°F',
+  [BoundaryTypeType.Time]: ''
 }
 
 export default function BoundariesCard({ boundaries, boundary, heading }: BoundariesCardProps) {
@@ -64,11 +72,13 @@ export default function BoundariesCard({ boundaries, boundary, heading }: Bounda
     ...vals, [b.name]: boundary?.[b.name] ?? ''
   }), {} as Record<keyof Boundary, string>)
   
-  const resolver = useResolver(boundaries)
-  const { register, handleSubmit, getValues, reset } = useForm<Record<string, string>>({ defaultValues, resolver })
+  const resolver = useResolver()
+  const form = useForm<BoundariesFormType>({ defaultValues, resolver })
+  const { handleSubmit, getValues, reset } = form
 
-  const handleSave = async (values: Record<keyof Boundary, string>) => {
+  const handleSave = async (values: BoundariesFormType) => {
     setLoading(true)
+    console.log(values, JSON.stringify(values))
     try {
       const response = await fetch(`/api/boundaries/${boundary?.id}`, {
         method: 'PATCH',
@@ -88,6 +98,13 @@ export default function BoundariesCard({ boundaries, boundary, heading }: Bounda
     } finally {
       setLoading(false)
     }
+  }
+
+  const getValue = (name: keyof Boundary, type: BoundaryTypeType) => {
+    const value = getValues(name)
+    return value && type === BoundaryTypeType.Time
+      ? DateTime.fromISO(value.replace(' ', 'T')).toLocaleString(DateTime.TIME_SIMPLE)
+      : `${value}${units[type]}`
   }
 
   return <Card sx={{ minWidth: '33.33%' }}>
@@ -114,18 +131,14 @@ export default function BoundariesCard({ boundaries, boundary, heading }: Bounda
                   </TableCell>
                   <TableCell sx={{ pl: 1.5, ...editing ? { py: 0.81, pl: 0, borderBottom: 'none' } : {} }}>
                     {editing
-                      ? <TextField
-                          {...register(b.name, { required: true })}
-                          onKeyDown={e => maskNumberInput(e, getValues(b.name))}
-                          size="small"
-                          slotProps={{
-                            input: {
-                              endAdornment: units[b.type] &&
-                                <InputAdornment position="end">{units[b.type]}</InputAdornment>
-                            }
-                          }}
+                      ? <FormField
+                          form={form}
+                          name={b.name}
+                          type={b.type}
+                          units={units[b.type]}
+                          required
                         />
-                      : `${getValues(b.name) ?? ''}${units[b.type]}`}
+                      : getValue(b.name, b.type)}
                   </TableCell>
                 </TableRow>)}
             </TableBody>
