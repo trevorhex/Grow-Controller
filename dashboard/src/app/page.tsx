@@ -19,9 +19,12 @@ export default function IndexPage() {
   const [loadingPage, setLoadingPage] = useState(true)
 
   const fetchFlushData = async () => {
+    setLoadingPage(true)
     try {
-      setLoadingPage(true)
-      const response = await fetch(`/api/flushes/current`)
+      const response = await fetch('/api/flushes/current', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      })
       
       if (response.ok) {
         const result = await response.json()
@@ -35,13 +38,17 @@ export default function IndexPage() {
   }
 
   const handleCreateFlush = async (setLoading: (loading: boolean) => void) => {
+    setLoading(true)
     try {
-      setLoading(true)
-      const response = await fetch('/api/flushes/new', { method: 'GET' })
-      
+      const response = await fetch('/api/flushes/new', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      })
+
       if (response.ok) {
-        const newFlushData = await response.json()
-        console.log(newFlushData)
+        const newFlushData: FlushData = await response.json()
+        console.log('New flush created:', newFlushData)
+        setFlush(newFlushData)
       } else {
         console.error('Failed to create flush:', response.statusText)
       }

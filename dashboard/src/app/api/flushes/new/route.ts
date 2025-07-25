@@ -3,11 +3,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import { API_URL } from '@/api/config'
 import { ROUTES } from '@/config/routes'
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
     const response = await fetch(`${API_URL}${ROUTES.FLUSHES}/new`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
     })
 
     if (!response.ok) {

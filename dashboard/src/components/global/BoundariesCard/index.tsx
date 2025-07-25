@@ -112,9 +112,9 @@ export default function BoundariesCard({ boundaries, boundary, heading }: Bounda
                 <TableCell colSpan={2} sx={{ ...editing ? { borderBottom: 'none' } : {} }}>
                   <Stack direction="row" justifyContent="space-between" alignItems="center" gap={1}>
                     <Typography variant="h5">{heading}</Typography>
-                    {editing
-                      ? <IconButton onClick={() => setEditing(false)}><CloseIcon /></IconButton>
-                      : <IconButton onClick={() => setEditing(true)}><EditIcon /></IconButton>}
+                    <IconButton onClick={() => setEditing(!editing)}>
+                      {editing ? <CloseIcon /> : <EditIcon />}
+                    </IconButton>
                   </Stack>
                 </TableCell>
               </TableRow>

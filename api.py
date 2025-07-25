@@ -59,9 +59,9 @@ def flushes():
     conn.close()
 
 #
-# GET /flushes/new
+# POST /flushes/new
 #
-@app.route('/flushes/new', methods=['GET'])
+@app.route('/flushes/new', methods=['POST'])
 def new_flush():
   conn = create_connection()
   try:

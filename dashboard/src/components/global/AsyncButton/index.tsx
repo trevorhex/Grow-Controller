@@ -5,7 +5,7 @@ import { useState } from 'react'
 import Button, { ButtonProps } from '@mui/material/Button'
 
 export interface AsyncButtonProps extends Omit<ButtonProps, 'onClick'> {
-  onClick: (setLoading: (loading: boolean) => void) => Promise<void>
+  onClick: (setLoading: (loading: boolean) => void) => void
 }
 
 export default function AsyncButton({ onClick, ...props }: AsyncButtonProps) {
