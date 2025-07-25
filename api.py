@@ -66,8 +66,15 @@ def new_flush():
   conn = create_connection()
   try:
     cursor = conn.cursor()
-    # TODO: create new flush record
-    return jsonify({ 'message': 'New flush created' }), 201
+    cursor.execute('INSERT INTO flushes (current) VALUES (1);')
+    conn.commit()
+
+    cursor.execute('SELECT * FROM flushes WHERE current = 1')
+    flush_row = cursor.fetchone()
+    if not flush_row:
+      return jsonify({ 'error': 'Failed to create new flush' }), 500
+
+    return jsonify(dict(flush_row)), 201
   except Exception as e:
     print(f"An error occurred: {str(e)}")
     return jsonify({ 'error': str(e) }), 500

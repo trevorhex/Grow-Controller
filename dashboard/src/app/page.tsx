@@ -2,21 +2,25 @@
 
 import { useState, useEffect } from 'react'
 
-import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 import CircularProgress from '@mui/material/CircularProgress'
 
 import { FlushData } from '@/interfaces/Flush'
 
 import Main from '@/components/templates/Main'
-import CurrentFlushPage from '@/components/pages/CurrentFlush'
+import Graph from '@/components/global/Graph'
+import StatusCard from '@/components/global/StatusCard'
+import BoundariesCard from '@/components/global/BoundariesCard'
+import AsyncButton from '@/components/global/AsyncButton'
 
 export default function IndexPage() {
   const [flush, setFlush] = useState<FlushData | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [loadingPage, setLoadingPage] = useState(true)
 
   const fetchFlushData = async () => {
     try {
-      setLoading(true)
+      setLoadingPage(true)
       const response = await fetch(`/api/flushes/current`)
       
       if (response.ok) {
@@ -26,6 +30,24 @@ export default function IndexPage() {
     } catch (err) {
       console.log('Error fetching flush data:', err)
     } finally {
+      setLoadingPage(false)
+    }
+  }
+
+  const handleCreateFlush = async (setLoading: (loading: boolean) => void) => {
+    try {
+      setLoading(true)
+      const response = await fetch('/api/flushes/new', { method: 'GET' })
+      
+      if (response.ok) {
+        const newFlushData = await response.json()
+        console.log(newFlushData)
+      } else {
+        console.error('Failed to create flush:', response.statusText)
+      }
+    } catch (error) {
+      console.error('Error creating flush:', error)
+    } finally {
       setLoading(false)
     }
   }
@@ -34,15 +56,56 @@ export default function IndexPage() {
     fetchFlushData()
   }, [])
 
-  if (loading) {
+  if (loadingPage) {
     return (
       <Main>
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+        <Stack justifyContent="center" alignItems="center" minHeight="400px">
           <CircularProgress />
-        </Box>
+        </Stack>
       </Main>
     )
   }
 
-  return <CurrentFlushPage flush={flush} />
+  if (!flush || flush.error) {
+    return (
+      <Main>
+        <Stack gap={6} alignItems="center">
+          <Typography variant="h4" textAlign="center">No current flush.</Typography>
+          <AsyncButton variant="contained" onClick={handleCreateFlush}>Create New Flush</AsyncButton>
+        </Stack>
+      </Main>
+    )
+  }
+
+  return <Main>
+    <Stack gap={6}>
+      <Stack direction={{ md: 'row' }} gap={4}>
+        <StatusCard flush={flush} />
+        <BoundariesCard
+          heading="Relay Boundaries"
+          boundary={flush.boundary}
+          boundaries={[
+            'humidifier_on',
+            'humidifier_off',
+            'fan_on',
+            'fan_off',
+            'lights_on',
+            'lights_off'
+          ]}
+        />
+        <BoundariesCard
+          heading="Warning Boundaries"
+          boundary={flush.boundary}
+          boundaries={[
+            'humidity_min_warn',
+            'humidity_max_warn',
+            'co2_max_warn',
+            'temperature_min_warn',
+            'temperature_max_warn'
+          ]}
+        />
+      </Stack>
+      {flush.readings?.length > 0 && <Graph title="Trends" readings={flush.readings} />}
+    </Stack>
+  </Main>
 }
