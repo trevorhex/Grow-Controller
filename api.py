@@ -71,10 +71,21 @@ def new_flush():
 
     cursor.execute('SELECT * FROM flushes WHERE current = 1')
     flush_row = cursor.fetchone()
+
     if not flush_row:
       return jsonify({ 'error': 'Failed to create new flush' }), 500
+    
+    cursor.execute('INSERT INTO boundaries (flush_id) VALUES (?)', (flush_row['id'],))
+    conn.commit()
 
-    return jsonify(dict(flush_row)), 201
+    cursor.execute('SELECT * FROM boundaries WHERE flush_id = ?', (flush_row['id'],))
+    boundary_row = cursor.fetchone()
+
+    flush_data = dict(flush_row)
+    flush_data['boundary'] = dict(boundary_row) if boundary_row else None
+    flush_data['readings'] = []
+
+    return jsonify(flush_data), 201
   except Exception as e:
     print(f"An error occurred: {str(e)}")
     return jsonify({ 'error': str(e) }), 500
