@@ -26,6 +26,7 @@ import { BoundaryView, BoundaryType, BoundariesForm, BoundariesFormFields } from
 export interface BoundariesCardProps {
   boundaries: Array<keyof BoundariesFormFields>
   boundary: Boundary | null
+  setBoundaryIndex?: (index: number) => void
   heading?: string
 }
 
@@ -36,10 +37,7 @@ const units: Record<BoundaryType, string> = {
   [BoundaryType.Time]: ''
 }
 
-export default function BoundariesCard({ boundaries, boundary, heading }: BoundariesCardProps) {
-  const [editing, setEditing] = useState(false)
-  const [loading, setLoading] = useState(false)
-
+export default function BoundariesCard({ boundaries, boundary, setBoundaryIndex = () => {}, heading }: BoundariesCardProps) {
   const boundaryFields = [
     { label: 'Humidifier On', name: 'humidifier_on', type: BoundaryType.Percentage },
     { label: 'Humidifier Off', name: 'humidifier_off', type: BoundaryType.Percentage },
@@ -57,6 +55,9 @@ export default function BoundariesCard({ boundaries, boundary, heading }: Bounda
   const defaultValues = boundaryFields.reduce((vals, b) => ({
     ...vals, [b.name]: boundary?.[b.name]?.toString() ?? ''
   }), {} as Record<keyof BoundariesFormFields, string>)
+
+  const [editing, setEditing] = useState(!Object.values(defaultValues).some(Boolean))
+  const [loading, setLoading] = useState(false)
 
   const resolver = useResolver()
   const form = useForm<BoundariesForm>({ defaultValues, resolver })

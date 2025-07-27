@@ -8,7 +8,7 @@ export interface Flush {
   active: number
   current: number
   readings: Reading[]
-  boundary: Boundary | null
+  boundaries: Boundary[]
   stage: Stage
 }
 

@@ -20,6 +20,8 @@ export interface StatusCardProps {
 export default function StatusCard({ flush }: StatusCardProps) {
   const [active, setActive] = useState(!!flush.active)
 
+  const hasBoundaries = flush.boundaries.reduce((has, b) => has || Object.values(b).some(Boolean), false)
+
   const formatDate = (dateString?: string | Date) => dateString
     ? DateTime.fromISO(dateString.toString().replace(' ', 'T')).toLocaleString(DateTime.DATETIME_MED)
     : '--'
@@ -33,10 +35,11 @@ export default function StatusCard({ flush }: StatusCardProps) {
           onClick={() => setActive(!active)}
           disableRipple
           fullWidth
+          disabled={!hasBoundaries}
         >
           {active ? 'Pause' : 'Start'}
         </Button>
-        <Button
+        {flush.readings.length > 0 && <Button
           variant="contained"
           color="secondary"
           onClick={() => setActive(false)}
@@ -44,7 +47,7 @@ export default function StatusCard({ flush }: StatusCardProps) {
           fullWidth
         >
           End
-        </Button>
+        </Button>}
       </Stack>
       <Table>
         <TableBody>

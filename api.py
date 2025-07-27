@@ -35,7 +35,7 @@ def flush(flush_id=None):
     boundary_data = dict(boundary_row) if boundary_row else None
 
     flush_data['readings'] = readings_data
-    flush_data['boundary'] = boundary_data
+    flush_data['boundaries'] = [boundary_data] if boundary_data else []
 
     return jsonify(flush_data)
   except Exception as e:

@@ -16,6 +16,7 @@ import AsyncButton from '@/components/global/AsyncButton'
 
 export default function IndexPage() {
   const [flush, setFlush] = useState<FlushData | null>(null)
+  const [boundaryIndex, setBoundaryIndex] = useState(0)
   const [loadingPage, setLoadingPage] = useState(true)
 
   const fetchFlushData = async () => {
@@ -90,7 +91,7 @@ export default function IndexPage() {
         <StatusCard flush={flush} />
         <BoundariesCard
           heading="Relay Boundaries"
-          boundary={flush.boundary}
+          boundary={flush.boundaries[boundaryIndex]}
           boundaries={[
             'humidifier_on',
             'humidifier_off',
@@ -99,10 +100,11 @@ export default function IndexPage() {
             'lights_on',
             'lights_off'
           ]}
+          setBoundaryIndex={setBoundaryIndex}
         />
         <BoundariesCard
           heading="Warning Boundaries"
-          boundary={flush.boundary}
+          boundary={flush.boundaries[boundaryIndex]}
           boundaries={[
             'humidity_min_warn',
             'humidity_max_warn',
@@ -110,6 +112,7 @@ export default function IndexPage() {
             'temperature_min_warn',
             'temperature_max_warn'
           ]}
+          setBoundaryIndex={setBoundaryIndex}
         />
       </Stack>
       {flush.readings?.length > 0 && <Graph title="Trends" readings={flush.readings} />}
